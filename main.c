@@ -3,23 +3,32 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
+#include "stddef.h"
 #include "stdio.h"
 #include "permscalc.h"
 
 int parse(const char *input)
 {
+	char *output;
 	switch (identify_type(input)) {
 	case PERMISSION_TYPE_NUMERIC:
-		fprintf(stdout, "%s\n", convert_to_symbolic(input));
+		output = numeric_to_symbolic(input);
 		break;
 	case PERMISSION_TYPE_SYMBOLIC:
-		fprintf(stdout, "%s\n", convert_to_numeric(input));
+		output = symbolic_to_numeric(input);
+		break;
+	case PERMISSION_TYPE_SYMBOLIC_WITH_D:
+		output = symbolic_with_d_to_numeric(input);
+		break;
+	case PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA:
+		output = symbolic_with_d_and_extra_to_numeric(input);
 		break;
 	case PERMISSION_TYPE_UNKNOWN:
 	default:
 		fprintf(stderr, "%s: invalid permissions value\n", input);
 		return 0;
 	}
+	fprintf(stdout, "%s\n", output);
 	return 1;
 }
 
@@ -34,9 +43,8 @@ int main(int argc, char **argv)
 				return 1;
 			}
 		}
-
 	} else {
-		int i = 1;
+		size_t i = 1;
 		while (i < argc) {
 			if (!parse((const char *) argv[i++])) {
 				return 1;
