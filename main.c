@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-#include "stddef.h"
-#include "stdio.h"
 #include "permscalc.h"
+
+#include <stddef.h>
+#include <stdio.h>
 
 int parse(const char *input)
 {

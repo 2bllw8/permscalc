@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-#include "stddef.h"
-#include "stdlib.h"
-#include "string.h"
-
 #include "permscalc.h"
+
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define R 1 << 2
 #define W 1 << 1
