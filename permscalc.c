@@ -26,47 +26,66 @@
 #define LEN_SYMBOLIC_WITH_D LEN_SYMBOLIC + 1
 #define LEN_SYMBOLIC_WITH_D_AND_EXTRA LEN_SYMBOLIC_WITH_D + 1
 
+permission_t _assert_numeric(const char *str, size_t len)
+{
+	size_t i = 0;
+	while (i < len) {
+		if (str[i] < '0' || str[i] > '7') {
+			return PERMISSION_TYPE_UNKNOWN;
+		}
+		++i;
+	}
+	return PERMISSION_TYPE_NUMERIC;
+}
+
+permission_t _assert_symbolic(const char *str, size_t len,
+			      permission_t expected_type)
+{
+	size_t i = 0;
+	while (i < len) {
+		switch (i % 3) {
+		case 0:
+			if (str[i] != SYM_0 && str[i] != SYM_R) {
+				return PERMISSION_TYPE_UNKNOWN;
+			}
+			break;
+		case 1:
+			if (str[i] != SYM_0 && str[i] != SYM_W) {
+				return PERMISSION_TYPE_UNKNOWN;
+			}
+			break;
+		case 2:
+			if (str[i] != SYM_0 && str[i] != SYM_X) {
+				return PERMISSION_TYPE_UNKNOWN;
+			}
+			break;
+		}
+		++i;
+	}
+	return expected_type;
+}
+
 permission_t identify_type(const char *str)
 {
 	if (str == 0 || *str == 0) {
 		return PERMISSION_TYPE_UNKNOWN;
 	}
 
-	int i = 0, len = strlen(str);
+	size_t len = strlen(str);
 
 	switch (len) {
 	case LEN_NUMERIC:
-		while (i < len) {
-			if (str[i] < '0' || str[i] > '7') {
-				return PERMISSION_TYPE_UNKNOWN;
-			}
-			++i;
-		}
-		return PERMISSION_TYPE_NUMERIC;
+		return _assert_numeric(str, len);
 
 	case LEN_SYMBOLIC:
-		while (i < len) {
-			if (str[i] != SYM_R && str[i] != SYM_W &&
-			    str[i] != SYM_X && str[i] != SYM_0) {
-				return PERMISSION_TYPE_UNKNOWN;
-			}
-			++i;
-		}
-		return PERMISSION_TYPE_SYMBOLIC;
+		return _assert_symbolic(str, len, PERMISSION_TYPE_SYMBOLIC);
 
 	case LEN_SYMBOLIC_WITH_D:
 		if (str[0] != SYM_0 && str[0] != SYM_D) {
 			return PERMISSION_TYPE_UNKNOWN;
 		}
-		i = 1;
-		while (i < len) {
-			if (str[i] != SYM_R && str[i] != SYM_W &&
-			    str[i] != SYM_X && str[i] != SYM_0) {
-				return PERMISSION_TYPE_UNKNOWN;
-			}
-			++i;
-		}
-		return PERMISSION_TYPE_SYMBOLIC_WITH_D;
+		return _assert_symbolic(str + 1, len - 1,
+					PERMISSION_TYPE_SYMBOLIC_WITH_D);
 
 	case LEN_SYMBOLIC_WITH_D_AND_EXTRA:
 		if ((str[0] != SYM_0 && str[0] != SYM_D) ||
@@ -74,16 +93,9 @@ permission_t identify_type(const char *str)
 		     str[len - 1] != SYM_EXTRA_EXTENDED)) {
 			return PERMISSION_TYPE_UNKNOWN;
 		}
-		i = 1;
-		--len;
-		while (i < len) {
-			if (str[i] != SYM_R && str[i] != SYM_W &&
-			    str[i] != SYM_X && str[i] != SYM_0) {
-				return PERMISSION_TYPE_UNKNOWN;
-			}
-			++i;
-		}
-		return PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA;
+		return _assert_symbolic(
+			str + 1, len - 2,
+			PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA);
 	default:
 		return PERMISSION_TYPE_UNKNOWN;
 	}

@@ -37,6 +37,7 @@ int main(int argc, char **argv)
 	       identify_type("---x-w--wx+"));
 
 	assert(PERMISSION_TYPE_UNKNOWN == identify_type("rwxwxrwx"));
+	assert(PERMISSION_TYPE_UNKNOWN == identify_type("rxwrwxrwx"));
 	assert(PERMISSION_TYPE_UNKNOWN == identify_type("rw-r-x-wa"));
 	assert(PERMISSION_TYPE_UNKNOWN == identify_type("888"));
 	assert(PERMISSION_TYPE_UNKNOWN == identify_type("0123"));
