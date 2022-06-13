@@ -120,58 +120,25 @@ char *numeric_to_symbolic(const char *numeric)
 
 char *_symbolic_to_numeric(const char *symbolic, size_t len)
 {
-	int owner = 0, group = 0, others = 0;
-	size_t i = 0;
+	const char symbols[] = { SYM_R, SYM_W, SYM_X };
+	const int values[] = { R, W, X };
+
+	int numeric_values[] = { 0, 0, 0 };
+	int i = 0;
 
 	while (i < len) {
-		switch (symbolic[i]) {
-		case SYM_R:
-			switch (i) {
-			case 0:
-				owner |= R;
-				break;
-			case 3:
-				group |= R;
-				break;
-			case 6:
-				others |= R;
-				break;
-			}
-			break;
-		case SYM_W:
-			switch (i) {
-			case 1:
-				owner |= W;
-				break;
-			case 4:
-				group |= W;
-				break;
-			case 7:
-				others |= W;
-				break;
-			}
-			break;
-		case SYM_X:
-			switch (i) {
-			case 2:
-				owner |= X;
-				break;
-			case 5:
-				group |= X;
-				break;
-			case 8:
-				others |= X;
-				break;
-			}
-			break;
+		int target_idx = i / 3;
+		int value_idx = i % 3;
+		if (symbolic[i] == symbols[value_idx]) {
+			numeric_values[target_idx] |= values[value_idx];
 		}
 		++i;
 	}
 
 	char *numeric = malloc(sizeof(char) * LEN_NUMERIC);
-	numeric[0] = '0' + owner;
-	numeric[1] = '0' + group;
-	numeric[2] = '0' + others;
+	numeric[0] = '0' + numeric_values[0];
+	numeric[1] = '0' + numeric_values[1];
+	numeric[2] = '0' + numeric_values[2];
 	return numeric;
 }
 
