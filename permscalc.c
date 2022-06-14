@@ -6,6 +6,7 @@
 #include "permscalc.h"
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -103,29 +104,34 @@ permission_t identify_type(const char *str)
 
 char *numeric_to_symbolic(const char *numeric)
 {
-	int others = numeric[2] - '0', group = numeric[1] - '0',
-	    owner = numeric[0] - '0';
+	const char symbols[] = { SYM_R, SYM_W, SYM_X };
+	const uint8_t masks[] = { R, W, X };
+	const uint8_t values[] = {
+		numeric[0] - '0',
+		numeric[1] - '0',
+		numeric[2] - '0',
+	};
+
 	char *symbolic = malloc(sizeof(char) * LEN_SYMBOLIC);
-	symbolic[0] = (owner & R) ? SYM_R : SYM_0;
-	symbolic[1] = (owner & W) ? SYM_W : SYM_0;
-	symbolic[2] = (owner & X) ? SYM_X : SYM_0;
-	symbolic[3] = (group & R) ? SYM_R : SYM_0;
-	symbolic[4] = (group & W) ? SYM_W : SYM_0;
-	symbolic[5] = (group & X) ? SYM_X : SYM_0;
-	symbolic[6] = (others & R) ? SYM_R : SYM_0;
-	symbolic[7] = (others & W) ? SYM_W : SYM_0;
-	symbolic[8] = (others & X) ? SYM_X : SYM_0;
+	size_t i = 0;
+	while (i < LEN_SYMBOLIC) {
+		unsigned int target_idx = i / 3;
+		unsigned int value_idx = i % 3;
+		symbolic[i++] = (values[target_idx] & masks[value_idx]) ?
+					symbols[value_idx] :
+					      SYM_0;
+	}
 	return symbolic;
 }
 
 char *_symbolic_to_numeric(const char *symbolic, size_t len)
 {
 	const char symbols[] = { SYM_R, SYM_W, SYM_X };
-	const int values[] = { R, W, X };
+	const uint8_t values[] = { R, W, X };
 
-	int numeric_values[] = { 0, 0, 0 };
-	int i = 0;
+	uint8_t numeric_values[] = { 0, 0, 0 };
 
+	size_t i = 0;
 	while (i < len) {
 		int target_idx = i / 3;
 		int value_idx = i % 3;
