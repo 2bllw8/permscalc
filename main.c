@@ -18,11 +18,11 @@ int parse(const char *input)
 	case PERMISSION_TYPE_SYMBOLIC:
 		output = symbolic_to_numeric(input);
 		break;
-	case PERMISSION_TYPE_SYMBOLIC_WITH_D:
-		output = symbolic_with_d_to_numeric(input);
+	case PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX:
+		output = symbolic_with_prefix_to_numeric(input);
 		break;
-	case PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA:
-		output = symbolic_with_d_and_extra_to_numeric(input);
+	case PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX_AND_POSTFIX:
+		output = symbolic_with_prefix_and_postfix_to_numeric(input);
 		break;
 	case PERMISSION_TYPE_UNKNOWN:
 	default:

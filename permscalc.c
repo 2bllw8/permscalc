@@ -18,14 +18,13 @@
 #define SYM_W 'w'
 #define SYM_X 'x'
 #define SYM_0 '-'
-#define SYM_D 'd'
 #define SYM_EXTRA_ACL '+'
 #define SYM_EXTRA_EXTENDED '@'
 
 #define LEN_NUMERIC 3
 #define LEN_SYMBOLIC 9
-#define LEN_SYMBOLIC_WITH_D LEN_SYMBOLIC + 1
-#define LEN_SYMBOLIC_WITH_D_AND_EXTRA LEN_SYMBOLIC_WITH_D + 1
+#define LEN_SYMBOLIC_WITH_PREFIX LEN_SYMBOLIC + 1
+#define LEN_SYMBOLIC_WITH_PREFIX_AND_POSTFIX LEN_SYMBOLIC_WITH_PREFIX + 1
 
 permission_t _assert_numeric(const char *str, size_t len)
 {
@@ -81,22 +80,18 @@ permission_t identify_type(const char *str)
 	case LEN_SYMBOLIC:
 		return _assert_symbolic(str, len, PERMISSION_TYPE_SYMBOLIC);
 
-	case LEN_SYMBOLIC_WITH_D:
-		if (str[0] != SYM_0 && str[0] != SYM_D) {
-			return PERMISSION_TYPE_UNKNOWN;
-		}
+	case LEN_SYMBOLIC_WITH_PREFIX:
 		return _assert_symbolic(str + 1, len - 1,
-					PERMISSION_TYPE_SYMBOLIC_WITH_D);
+					PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX);
 
-	case LEN_SYMBOLIC_WITH_D_AND_EXTRA:
-		if ((str[0] != SYM_0 && str[0] != SYM_D) ||
-		    (str[len - 1] != SYM_0 && str[len - 1] != SYM_EXTRA_ACL &&
-		     str[len - 1] != SYM_EXTRA_EXTENDED)) {
+	case LEN_SYMBOLIC_WITH_PREFIX_AND_POSTFIX:
+		if (str[len - 1] != SYM_0 && str[len - 1] != SYM_EXTRA_ACL &&
+		    str[len - 1] != SYM_EXTRA_EXTENDED) {
 			return PERMISSION_TYPE_UNKNOWN;
 		}
 		return _assert_symbolic(
 			str + 1, len - 2,
-			PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA);
+			PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX_AND_POSTFIX);
 	default:
 		return PERMISSION_TYPE_UNKNOWN;
 	}
@@ -153,12 +148,12 @@ char *symbolic_to_numeric(const char *str)
 	return _symbolic_to_numeric(str, strlen(str));
 }
 
-char *symbolic_with_d_to_numeric(const char *str)
+char *symbolic_with_prefix_to_numeric(const char *str)
 {
 	return _symbolic_to_numeric(str + 1, strlen(str) - 1);
 }
 
-char *symbolic_with_d_and_extra_to_numeric(const char *str)
+char *symbolic_with_prefix_and_postfix_to_numeric(const char *str)
 {
 	return _symbolic_to_numeric(str + 1, strlen(str) - 2);
 }

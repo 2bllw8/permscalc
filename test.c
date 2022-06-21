@@ -26,14 +26,14 @@ int main(int argc, char **argv)
 	assert(PERMISSION_TYPE_SYMBOLIC == identify_type("-w--w--w-"));
 	assert(PERMISSION_TYPE_SYMBOLIC == identify_type("--x--x--x"));
 	assert(PERMISSION_TYPE_SYMBOLIC == identify_type("rw-r-x-wx"));
-	assert(PERMISSION_TYPE_SYMBOLIC_WITH_D == identify_type("-rw-r--r--"));
-	assert(PERMISSION_TYPE_SYMBOLIC_WITH_D == identify_type("-rw-r--r--"));
-	assert(PERMISSION_TYPE_SYMBOLIC_WITH_D == identify_type("drw-r--r--"));
-	assert(PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA ==
+	assert(PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX == identify_type("-rw-r--r--"));
+	assert(PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX == identify_type("-rw-r--r--"));
+	assert(PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX == identify_type("drw-r--r--"));
+	assert(PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX_AND_POSTFIX ==
 	       identify_type("-rw-r--r--@"));
-	assert(PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA ==
+	assert(PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX_AND_POSTFIX ==
 	       identify_type("drwxrw---x@"));
-	assert(PERMISSION_TYPE_SYMBOLIC_WITH_D_AND_EXTRA ==
+	assert(PERMISSION_TYPE_SYMBOLIC_WITH_PREFIX_AND_POSTFIX ==
 	       identify_type("---x-w--wx+"));
 
 	assert(PERMISSION_TYPE_UNKNOWN == identify_type("rwxwxrwx"));
@@ -61,14 +61,16 @@ int main(int argc, char **argv)
 	assert(strcmp("111", symbolic_to_numeric("--x--x--x")) == 0);
 	assert(strcmp("653", symbolic_to_numeric("rw-r-x-wx")) == 0);
 
-	assert(strcmp("644", symbolic_with_d_to_numeric("-rw-r--r--")) == 0);
-	assert(strcmp("644", symbolic_with_d_to_numeric("drw-r--r--")) == 0);
+	assert(strcmp("644", symbolic_with_prefix_to_numeric("-rw-r--r--")) == 0);
+	assert(strcmp("644", symbolic_with_prefix_to_numeric("drw-r--r--")) == 0);
 
-	assert(strcmp("644", symbolic_with_d_and_extra_to_numeric(
+	assert(strcmp("644", symbolic_with_prefix_and_postfix_to_numeric(
 				     "-rw-r--r--@")) == 0);
-	assert(strcmp("761", symbolic_with_d_and_extra_to_numeric(
+	assert(strcmp("761", symbolic_with_prefix_and_postfix_to_numeric(
 				     "drwxrw---x@")) == 0);
-	assert(strcmp("123", symbolic_with_d_and_extra_to_numeric(
+	assert(strcmp("761", symbolic_with_prefix_and_postfix_to_numeric(
+				     "brwxrw---x@")) == 0);
+	assert(strcmp("123", symbolic_with_prefix_and_postfix_to_numeric(
 				     "---x-w--wx+")) == 0);
 
 	// Double conversion should preserve the value (minus the "extras")
