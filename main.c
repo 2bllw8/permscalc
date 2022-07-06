@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int parse(const char *input)
 {
@@ -30,6 +31,7 @@ int parse(const char *input)
 		return 0;
 	}
 	fprintf(stdout, "%s\n", output);
+	free(output);
 	return 1;
 }
 
