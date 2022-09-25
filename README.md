@@ -4,7 +4,7 @@ Unix chmod permission calculator utility tool.
 
 ## Usage
 
-Pass one or more parameter(s):
+Pass one or more parameter(s) and file paths:
 
 ```
 $ permscalc 777
@@ -20,6 +20,10 @@ $ permscalc 644 720 -rw-rw-r--
 rw-r--r--
 rwx-w----
 664
+
+$ permscalc -f Makefile --file permscalc
+644
+755
 ```
 
 Interactive mode (from `stdin`):
