@@ -107,7 +107,7 @@ char *numeric_to_symbolic(const char *numeric)
 		numeric[2] - '0',
 	};
 
-	char *symbolic = malloc(sizeof(char) * LEN_SYMBOLIC);
+	char *symbolic = malloc(sizeof(char) * (LEN_SYMBOLIC + 1));
 	size_t i = 0;
 	while (i < LEN_SYMBOLIC) {
 		unsigned int target_idx = i / 3;
@@ -116,6 +116,7 @@ char *numeric_to_symbolic(const char *numeric)
 					symbols[value_idx] :
 					      SYM_0;
 	}
+	symbolic[i] = 0;
 	return symbolic;
 }
 
@@ -136,10 +137,11 @@ char *_symbolic_to_numeric(const char *symbolic, size_t len)
 		++i;
 	}
 
-	char *numeric = malloc(sizeof(char) * LEN_NUMERIC);
+	char *numeric = malloc(sizeof(char) * (LEN_NUMERIC + 1));
 	numeric[0] = '0' + numeric_values[0];
 	numeric[1] = '0' + numeric_values[1];
 	numeric[2] = '0' + numeric_values[2];
+	numeric[3] = 0;
 	return numeric;
 }
 
