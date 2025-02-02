@@ -59,6 +59,7 @@ int parse_path(const char *path)
 		owner + '0',
 		group + '0',
 		other + '0',
+		0
 	};
 
 	printf("%s\n", numeric);
