@@ -1,7 +1,7 @@
 # Copyright (c) 2022 2bllw8
 # SPDX-License-Identifier: GPL-3.0-only
 
-CC     = gcc
+CC     ?= gcc
 CFLAGS = -Wall -Werror
 DEPS   = permscalc.h
 
@@ -18,4 +18,4 @@ test: permscalc.o test.o
 clean:
 	rm -f *.o permscalc test
 
-.DEFAULT_GOAL :=  permscalc
+.DEFAULT_GOAL := permscalc
