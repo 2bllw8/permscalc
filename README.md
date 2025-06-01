@@ -47,8 +47,20 @@ Compile with make
 make
 ```
 
+With nix flake
+
+```
+nix build
+```
+
 ## Test
 
 ```
 make test
+```
+
+With nix flake
+
+```
+nix flake check
 ```
